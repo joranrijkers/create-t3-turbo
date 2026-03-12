@@ -1,5 +1,5 @@
 {
-  "name": "@acme/api",
+  "name": "@prikkr/api",
   "private": true,
   "type": "module",
   "exports": {
@@ -15,23 +15,28 @@
     "dev": "tsc",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint --flag unstable_native_nodejs_ts_config",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@acme/auth": "workspace:*",
-    "@acme/db": "workspace:*",
-    "@acme/validators": "workspace:*",
+    "@prikkr/auth": "workspace:*",
+    "@prikkr/db": "workspace:*",
+    "@prikkr/validators": "workspace:*",
+    "@supabase/supabase-js": "^2.49.4",
     "@trpc/server": "catalog:",
+    "openai": "^6.27.0",
     "superjson": "2.2.3",
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@acme/eslint-config": "workspace:*",
-    "@acme/prettier-config": "workspace:*",
-    "@acme/tsconfig": "workspace:*",
+    "@prikkr/eslint-config": "workspace:*",
+    "@prikkr/prettier-config": "workspace:*",
+    "@prikkr/tsconfig": "workspace:*",
+    "@types/pg": "^8.11.0",
     "eslint": "catalog:",
     "prettier": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "^3.2.4"
   },
-  "prettier": "@acme/prettier-config"
+  "prettier": "@prikkr/prettier-config"
 }

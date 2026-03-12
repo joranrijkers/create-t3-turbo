@@ -10,8 +10,9 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { z, ZodError } from "zod/v4";
 
-import type { Auth } from "@acme/auth";
-import { db } from "@acme/db/client";
+import type { Auth } from "@prikkr/auth";
+import { db } from "@prikkr/db/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 /**
  * 1. CONTEXT
@@ -29,6 +30,7 @@ import { db } from "@acme/db/client";
 export const createTRPCContext = async (opts: {
   headers: Headers;
   auth: Auth;
+  supabase?: SupabaseClient | null;
 }) => {
   const authApi = opts.auth.api;
   const session = await authApi.getSession({
@@ -38,6 +40,7 @@ export const createTRPCContext = async (opts: {
     authApi,
     session,
     db,
+    supabase: opts.supabase ?? null,
   };
 };
 /**
@@ -113,6 +116,8 @@ export const publicProcedure = t.procedure.use(timingMiddleware);
  *
  * @see https://trpc.io/docs/procedures
  */
+export type DrizzleDB = typeof db;
+
 export const protectedProcedure = t.procedure
   .use(timingMiddleware)
   .use(({ ctx, next }) => {

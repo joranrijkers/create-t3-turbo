@@ -132,7 +132,7 @@ For more information about the Better Auth CLI, see the [official documentation]
    +  "dev": "expo start --ios",
    ```
 
-2. Run `pnpm dev` at the project root folder.
+2. Run `pnpm dev` at the project root folder. This starts both the Next.js API and Expo; the Expo app needs the API for login and data. If you only run `pnpm --filter expo dev`, start the API in another terminal: `pnpm --filter @prikkr/nextjs dev`.
 
 #### Use Android Emulator
 
@@ -144,7 +144,7 @@ For more information about the Better Auth CLI, see the [official documentation]
    +  "dev": "expo start --android",
    ```
 
-3. Run `pnpm dev` at the project root folder.
+3. Run `pnpm dev` at the project root folder. This starts both the Next.js API and Expo; the Expo app needs the API for login and data. If you only run `pnpm --filter expo dev`, start the API in another terminal: `pnpm --filter @prikkr/nextjs dev`.
 
 ### 4. Configuring Better-Auth to work with Expo
 
@@ -216,6 +216,35 @@ The auth proxy comes as a better-auth plugin. This is required for the Next.js a
 ### Expo
 
 Deploying your Expo application works slightly differently compared to Next.js on the web. Instead of "deploying" your app online, you need to submit production builds of your app to app stores, like [Apple App Store](https://www.apple.com/app-store) and [Google Play](https://play.google.com/store/apps). You can read the full [guide to distributing your app](https://docs.expo.dev/distribution/introduction), including best practices, in the Expo docs.
+
+#### EAS Build profiles (Prikkr)
+
+The Expo app uses [`apps/expo/eas.json`](apps/expo/eas.json) with these profiles:
+
+- **development** — Development client for local testing.
+- **preview** — Internal distribution (e.g. TestFlight, Android internal testing). Use for beta testers before store release.
+- **production** — Store-ready builds for App Store and Play Store.
+
+For internal/beta testing:
+
+```bash
+cd apps/expo
+
+# iOS (TestFlight)
+eas build --platform ios --profile preview
+
+# Android (internal track)
+eas build --platform android --profile preview
+```
+
+After a successful build, submit to TestFlight or Play internal track:
+
+```bash
+eas submit --platform ios --latest   # or --id <build-id>
+eas submit --platform android --latest
+```
+
+Check `app.config.ts` (or `app.json`) for `version` and `ios.buildNumber` / `android.versionCode` when preparing store submissions; EAS can use `appVersionSource: "remote"` to manage versions from the dashboard.
 
 1. Make sure to modify the `getBaseUrl` function to point to your backend's production URL:
 

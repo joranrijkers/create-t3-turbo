@@ -1,9 +1,10 @@
 import type { NextRequest } from "next/server";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 
-import { appRouter, createTRPCContext } from "@acme/api";
+import { appRouter, createTRPCContext } from "@prikkr/api";
 
 import { auth } from "~/auth/server";
+import { getSupabaseAdmin } from "~/supabase/server";
 
 /**
  * Configure basic CORS headers
@@ -33,6 +34,7 @@ const handler = async (req: NextRequest) => {
       createTRPCContext({
         auth: auth,
         headers: req.headers,
+        supabase: getSupabaseAdmin(),
       }),
     onError({ error, path }) {
       console.error(`>>> tRPC Error on '${path}'`, error);
